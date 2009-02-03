@@ -1,0 +1,28 @@
+<oaf_info>
+	<oaf_server iid="OAFIID:AdamUsageMeterApplet_Factory"
+		type="exe" location="/usr/bin/adam-applet.py">
+
+		<oaf_attribute name="repo_ids" type="stringv">
+			<item value="IDL:Bonobo/GenericFactory:1.0"/>
+			<item value="IDL:Bonobo/Unknown:1.0"/>
+		</oaf_attribute>
+
+		<oaf_attribute name="name" type="string" value="Adam Usage Meter Applet"/>
+		<oaf_attribute name="description" type="string" value="Monitors Adam ADSL Usage"/>
+	</oaf_server>
+
+	<oaf_server iid="OAFIID:AdamUsageMeterApplet"
+		type="factory" location="OAFIID:AdamUsageMeterApplet_Factory">
+
+		<oaf_attribute name="repo_ids" type="stringv">
+			<item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
+			<item value="IDL:Bonobo/Control:1.0"/>
+			<item value="IDL:Bonobo/Unknown:1.0"/>
+		</oaf_attribute>
+
+		<oaf_attribute name="name" type="string" value="Adam Usage Meter Applet"/>
+		<oaf_attribute name="description" type="string" value="Monitors Adam ADSL Usage"/>
+		<oaf_attribute name="panel:category" type="string" value="Utilities"/>
+		<oaf_attribute name="panel:icon" type="string" value="/usr/share/adam/pixmaps/adam-applet.png"/>
+	</oaf_server>
+</oaf_info>
