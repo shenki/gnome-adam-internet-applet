@@ -58,23 +58,15 @@ else:
 	import gnome.applet
 	gnomeapplet = gnome.applet
 
-from adamutil import NodeUtil, UpdateError
-from history_window import HistoryWindow
+from adamutil import AdamUtil, UpdateError
 
 
 class AdamMeter:
-	"""
-	Main class of the GNOME Adam Usage Meter Panel Applet.
-	"""
 
 	ui_dir = os.path.join(ADAM_PREFIX, 'share', 'adam')
 	pixmap_dir = os.path.join(ui_dir, 'pixmaps')
 
 	def __init__(self, applet, iid):
-		"""
-		Initialises the usage meter
-		"""
-
 		# Initialize GConf
 		self.gconf_client = gconf.client_get_default()
 
@@ -102,14 +94,13 @@ class AdamMeter:
 		applet.setup_menu(menu,
 						 [("Preferences", self.show_prefs),
 						  ("About", self.show_about),
-						  ("Graph", self.show_graph),
 						  ("Update", self.update)],
 						  None)
 
 		applet.show_all()
 
 		# Initialize Adam Usage Checker
-		self.adamutil = NodeUtil()
+		self.adamutil = AdamUtil()
 		self.load_prefs()
 
 		# Connect background callback
@@ -193,11 +184,11 @@ class AdamMeter:
 
 			if self.adamutil.show_used:
 				percent = self.adamutil.percent_used
-				usage = self.adamutil.used
+				usage = self.adamutil.external
 				status = "used"
 			else:
 				percent = self.adamutil.percent_remaining
-				usage = self.adamutil.remaining
+				usage = self.adamutil.quota - self.adamutil.external
 				status = "remaining"
 
 			self.label.set_text("%i%%" % percent)
@@ -232,14 +223,6 @@ class AdamMeter:
 			None, self.logo)
 
 		result = about.run()
-
-
-        def show_graph(self, widget = None, data = None):
-                """
-                Displays the graph window
-                """
-                graph_window = HistoryWindow(self.adamutil, self.ui_dir)
-
 
 	def show_prefs(self, widget = None, data = None):
 		"""
