@@ -338,7 +338,7 @@
 
 <widget class="GtkWindow" id="graph">
   <property name="visible">True</property>
-  <property name="title" translatable="yes">Internode Usage Graph</property>
+  <property name="title" translatable="yes">Adam Usage Graph</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>

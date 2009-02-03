@@ -1,9 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 #                                                                             #
 # nodeutil.py - Support file for the                                          #
-#               GNOME ADSL Internode Usage Meter Panel Applet                 #
+#               GNOME ADSL Adam Usage Meter Panel Applet                 #
 #                                                                             #
-# Copyright (C) 2005  Sam Pohlenz <retrix@internode.on.net>                   #
+# Copyright (C) 2005  Sam Pohlenz <retrix@adam.on.net>                   #
 #                                                                             #
 # This program is free software; you can redistribute it and/or               #
 # modify it under the terms of the GNU General Public License                 #
@@ -21,40 +21,28 @@
 #                                                                             #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
-###########
-# Imports #
-###########
-
 import time
 import datetime
-import urllib
-
-
-#####################
-# Class Definitions #
-#####################
-
-class AppURLopener(urllib.FancyURLopener):
-  version = "UsageMeterForGNOME/1.6"
-
-urllib._urlopener = AppURLopener()
+import urllib2
+from BeautifulSoup import BeautifulSoup as soup
+from getpass import getpass
 
 class NodeUtil:
-	""" 
+	"""
 	Updates usage information, caching the data to avoid excessive requests
-	to the Internode servers. New data will only be fetched once per hour.
+	to the Adam servers. New data will only be fetched once per hour.
 	"""
 
 	def __init__(self):
 		"""
-		Initalize the Internode utility class
+		Initalize the Adam utility class
 		"""
 
 		self.username = ""
 		self.password = ""
 		self.show_used = False
 		self.time = 0
-		
+
 		self.error = ""
 
 		self.percent_used = 0
@@ -64,7 +52,7 @@ class NodeUtil:
 		self.remaining = 0
 
 		self.daysleft = 0
-		
+
 		self.history = []
 
 
@@ -73,64 +61,52 @@ class NodeUtil:
 		Updates data, regardless of currently held data
 		"""
 
-		params_dic = {}
-		params_dic["username"] = self.username
-		params_dic["password"] = self.password
-		params = urllib.urlencode(params_dic)
-
 		try:
-			f = urllib.urlopen("https://customer-webtools-api.internode.on.net/cgi-bin/padsl-usage", params)
-			data = f.read().split()
+			auth = urllib2.HTTPBasicAuthHandler()
+			auth.add_password(realm='Adam Members Area External Access',
+					uri='https://members.adam.com.au',
+					user=self.username,
+					passwd=self.password)
+			opener = urllib2.build_opener(auth)
+
 		except IOError:
 			self.error = "Failed to fetch usage data."
 			raise UpdateError
 
 		try:
-			params_dic["history"] = 1
-			params = urllib.urlencode(params_dic)
-			f = urllib.urlopen("https://customer-webtools-api.internode.on.net/cgi-bin/padsl-usage", params)
-			history = f.read().split()
-			self.history = [(history[x],history[x+1]) for x in range(0,len(history),2)]
-		except IOError:
-			self.error = "Failed to fetch history data."
-			raise UpdateError
+			s = soup(data.read())
+			quota_str = s.find("megabytequota").string
+			total_str = s.find("megabytesdownloadedtotal").string
+			external_str = s.find("megabytesdownloadedexternal").string
+			upload_str = s.find("megabytesuploadedtotal").string
+			date_str = s.find("quotastartdate").string
 
-		try:
-			self.quota = int(data[1])
-			self.used = float(data[0])
-			self.remaining = self.quota - self.used
+			last_update_str = s.find("lastupdate")
+			next_update_str = s.find("nextupdateestimate")
 
-			self.percent_remaining = int(round(self.remaining / self.quota * 100))
-			self.percent_used = int(round(self.used / self.quota * 100))
+			total = int(total_str)
+			external = int(external_str)
 
-			# Convert date from array to date and find difference with current date
-			# to get number of days remaining in billing period
-			# *Possibly a better way to do this*
-			datetuple = time.strptime(data[2], '%d/%m/%Y')
-			date = datetime.date(datetuple[0], datetuple[1], datetuple[2])
-			diff = date - datetime.date.today()
-		
-			self.daysleft = diff.days
+			self.start_date = dateparse(date_str)
+			self.last_update = dateparse(last_update_str)
+			self.next_update = dateparse(next_update_str)
 
-			self.time = time.time()
+			self.local = total - external
+			self.downloads = external
+			self.uploads = int(upload_str)
+			self.quota = int(quota_str)
+
 			print "Data updated for username %s." % self.username
 
-			self.error = ""
 		except:
-			# An error occurred
-			self.error = " ".join(data)
-
-			print self.error
-
-			raise UpdateError
-
+			self.error = "Failed to extract usage data"
 
 	def update(self):
 		"""
 		Updates data, first checking that there is no recent data
 		"""
 
-		if time.time() - 3600 > self.time:
+		if self.next_update < self.time:
 			self.do_update()
 
 
@@ -138,5 +114,5 @@ class UpdateError(Exception):
 	"""
 	Exception class to handle update errors
 	"""
-	
+
 	pass

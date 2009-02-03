@@ -10,60 +10,60 @@ for arg in sys.argv:
 				prefix = arg[9:]
 				prefix = os.path.expandvars(prefix)
 
-infile = open(os.path.join('internode', 'constants.py.in'))
+infile = open(os.path.join('adam', 'constants.py.in'))
 data = infile.read()
 infile.close()
 
-outfile = open(os.path.join('internode', 'constants.py'), 'w')
+outfile = open(os.path.join('adam', 'constants.py'), 'w')
 outfile.write(data)
-outfile.write("\nINTERNODE_PREFIX = '%s'\n\n" % prefix)
+outfile.write("\nADAM_PREFIX = '%s'\n\n" % prefix)
 
 # Test whether we want to import the deprecated gnome.applet or
 # the newer gnomeapplet
 try:
 	import gnomeapplet
 	# Use gnomeapplet
-	outfile.write("\nINTERNODE_GNOMEAPPLET = 'gnomeapplet'\n\n")
+	outfile.write("\nADAM_GNOMEAPPLET = 'gnomeapplet'\n\n")
 except ImportError:
 	# Use (deprecated) gnome.applet
-	outfile.write("\nINTERNODE_GNOMEAPPLET = 'gnome.applet'\n\n")
+	outfile.write("\nADAM_GNOMEAPPLET = 'gnome.applet'\n\n")
 
 outfile.close()
 
 
-# Write the install prefix to the InternodeUsageMeterApplet.server file (bonobo)
-infile = open('InternodeUsageMeterApplet.server.in')
+# Write the install prefix to the AdamUsageMeterApplet.server file (bonobo)
+infile = open('AdamUsageMeterApplet.server.in')
 data = infile.read().replace('@PREFIX@', prefix)
 infile.close()
 
-outfile = open('InternodeUsageMeterApplet.server', 'w')
+outfile = open('AdamUsageMeterApplet.server', 'w')
 outfile.write(data)
 outfile.close()
 
-from internode.constants import *
+from adam.constants import *
 
 # Do the setup routine
-setup(name = INTERNODE_NAME,
-	  version = INTERNODE_VERSION,
-	  description = INTERNODE_DESCRIPTION,
-	  url = INTERNODE_URL,
-	  author = INTERNODE_AUTHORS[0].split('<')[0],
-	  author_email = INTERNODE_AUTHORS[0],
+setup(name = ADAM_NAME,
+	  version = ADAM_VERSION,
+	  description = ADAM_DESCRIPTION,
+	  url = ADAM_URL,
+	  author = ADAM_AUTHORS[0].split('<')[0],
+	  author_email = ADAM_AUTHORS[0],
 	  license = 'GPL',
-	  packages = ['internode'],
-	  scripts = ['internode-applet.py'],
-	  data_files = [('lib/bonobo/servers', ['InternodeUsageMeterApplet.server']),
-	  				('share/internode', ['internode-applet.glade', 'menu.xml']),
-					('share/internode/pixmaps', ['pixmaps/internode-0.png',
-												 'pixmaps/internode-25.png',
-												 'pixmaps/internode-50.png',
-												 'pixmaps/internode-75.png',
-												 'pixmaps/internode-100.png',
-												 'pixmaps/internode-u0.png',
-												 'pixmaps/internode-u25.png',
-												 'pixmaps/internode-u75.png',
-												 'pixmaps/internode-u100.png',
-												 'pixmaps/internode-x.png',
-												 'pixmaps/internode-applet.png',
+	  packages = ['adam'],
+	  scripts = ['adam-applet.py'],
+	  data_files = [('lib/bonobo/servers', ['AdamUsageMeterApplet.server']),
+	  				('share/adam', ['adam-applet.glade', 'menu.xml']),
+					('share/adam/pixmaps', ['pixmaps/adam-0.png',
+												 'pixmaps/adam-25.png',
+												 'pixmaps/adam-50.png',
+												 'pixmaps/adam-75.png',
+												 'pixmaps/adam-100.png',
+												 'pixmaps/adam-u0.png',
+												 'pixmaps/adam-u25.png',
+												 'pixmaps/adam-u75.png',
+												 'pixmaps/adam-u100.png',
+												 'pixmaps/adam-x.png',
+												 'pixmaps/adam-applet.png',
 												 'pixmaps/logo.png']), ]
 	  )
