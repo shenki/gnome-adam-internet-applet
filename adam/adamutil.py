@@ -21,11 +21,10 @@
 #                                                                             #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
-import time
-import datetime
 import urllib2
 from BeautifulSoup import BeautifulSoup as soup
-from getpass import getpass
+from dateutil.parser import parse as dateparse
+from datetime import datetime
 
 class AdamUtil:
 	"""
@@ -41,7 +40,7 @@ class AdamUtil:
 		self.username = ""
 		self.password = ""
 		self.show_used = False
-		self.time = 0
+		self.time = datetime.now()
 
 		self.error = ""
 
@@ -53,8 +52,8 @@ class AdamUtil:
 		self.daysleft = 0
 
 		self.start_date = 0
-		self.last_update = 0
-		self.next_update = 0
+		self.last_update = datetime.min
+		self.next_update = datetime.now()
 
 		self.local = 0
 		self.external = 0
@@ -88,8 +87,10 @@ class AdamUtil:
 			upload_str = s.find("megabytesuploadedtotal").string
 			date_str = s.find("quotastartdate").string
 
-			last_update_str = s.find("lastupdate")
-			next_update_str = s.find("nextupdateestimate")
+			last_update_str = s.find("lastupdate").string
+			next_update_str = s.find("nextupdateestimate").string
+
+			print "Converting..."
 
 			total = int(total_str)
 
@@ -97,10 +98,14 @@ class AdamUtil:
 			self.last_update = dateparse(last_update_str)
 			self.next_update = dateparse(next_update_str)
 
+			print "\t...dates"
+
 			self.external = int(external_str)
 			self.local = total - self.external
 			self.uploads = int(upload_str)
 			self.quota = int(quota_str)
+
+			print "\t...data"
 
 			self.percent_remaining = int(round(
 				(self.external - self.quota) / self.quota * 100))
@@ -112,14 +117,12 @@ class AdamUtil:
 
 		except:
 			self.error = "Failed to extract usage data"
+			raise
 
 	def update(self):
 		"""
 		Updates data, first checking that there is no recent data
 		"""
-		print "Update logic says ", self.next_update < self.time
-		print self.next_update
-		print self.time
 
 		if self.next_update <= self.time:
 			self.do_update()
