@@ -24,7 +24,8 @@
 import urllib2
 from BeautifulSoup import BeautifulSoup as soup
 from dateutil.parser import parse as dateparse
-from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from datetime import datetime, date
 
 import logging
 
@@ -135,6 +136,11 @@ class AdamUtil:
 
 			log.debug("percent_remaining: %d", self.percent_remaining)
 			log.debug("percent_used: %d", self.percent_used)
+
+			end_date = self.start_date.date() + relativedelta(months=1)
+			self.daysleft = (end_date - date.today()).days
+
+			log.debug("daysleft: %d", self.daysleft)
 
 			log.info("Data updated for %s", self.username)
 
