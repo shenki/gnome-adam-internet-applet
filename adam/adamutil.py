@@ -145,8 +145,7 @@ class AdamUtil:
 			log.info("Data updated for %s", self.username)
 
 		except:
-			log.error = "Failed to extract usage data"
-			log.exception()
+			log.error("Failed to extract usage data")
 			raise
 
 	def update(self):
