@@ -26,6 +26,8 @@ from BeautifulSoup import BeautifulSoup as soup
 from dateutil.parser import parse as dateparse
 from datetime import datetime
 
+import logging
+
 class AdamUtil:
 	"""
 	Updates usage information, caching the data to avoid excessive requests
@@ -36,6 +38,8 @@ class AdamUtil:
 		"""
 		Initalize the Adam utility class
 		"""
+		logging.basicConfig(level=logging.DEBUG)
+		self.log = logging.getLogger("adamutil")
 
 		self.username = ""
 		self.password = ""
@@ -65,7 +69,7 @@ class AdamUtil:
 		Updates data, regardless of currently held data
 		"""
 		try:
-			print "Fetching data..."
+			log.info("Fetching data")
 			auth = urllib2.HTTPBasicAuthHandler()
 			auth.add_password(realm='Adam Members Area External Access',
 					uri='https://members.adam.com.au',
@@ -75,22 +79,32 @@ class AdamUtil:
 			data = opener.open('https://members.adam.com.au/um1.6/usage.xml')
 
 		except IOError:
-			self.error = "Failed to fetch usage data."
-			raise UpdateError
+			self.log.error("Failed to fetch usage data.")
+			self.log.exception()
 
 		try:
-			print "Parsing data..."
+			self.log.info("Parsing data")
+
 			s = soup(data.read())
 			quota_str = s.find("megabytequota").string
 			total_str = s.find("megabytesdownloadedtotal").string
 			external_str = s.find("megabytesdownloadedexternal").string
 			upload_str = s.find("megabytesuploadedtotal").string
 			date_str = s.find("quotastartdate").string
-
 			last_update_str = s.find("lastupdate").string
 			next_update_str = s.find("nextupdateestimate").string
 
-			print "Converting..."
+			self.log.debug("quota_str: ", quota_str)
+			self.log.debug("total_str: ", total_str)
+			self.log.debug("quota_str: ", external_str)
+			self.log.debug("upload_str: ", upload_str)
+			self.log.debug("date_str: ", date_str)
+			self.log.debug("last_update_str: ", last_update_str)
+			self.log.debug("next_update_str: ",next_update_str)
+
+
+
+			self.log.info("Converting strings to dates, ints, etc")
 
 			total = int(total_str)
 
@@ -98,14 +112,14 @@ class AdamUtil:
 			self.last_update = dateparse(last_update_str)
 			self.next_update = dateparse(next_update_str)
 
-			print "\t...dates"
+			self.log.info("dates")
 
 			self.external = int(external_str)
 			self.local = total - self.external
 			self.uploads = int(upload_str)
 			self.quota = int(quota_str)
 
-			print "\t...data"
+			self.log.info("data")
 
 			self.percent_remaining = int(round(
 				(self.external - self.quota) / self.quota * 100))
@@ -113,10 +127,11 @@ class AdamUtil:
 			self.used = self.external
 			self.remaining = self.quota - self.external
 
-			print "Data updated for %s." % self.username
+			self.log.info("Data updated for ", self.username)
 
 		except:
-			self.error = "Failed to extract usage data"
+			self.log.error = "Failed to extract usage data"
+			self.log.exception()
 			raise
 
 	def update(self):
