@@ -22,6 +22,7 @@
 
 import sys
 import os
+import logging
 
 from constants import *
 
@@ -134,6 +135,7 @@ class AdamMeter:
 
 
 	def update_image(self):
+		log = logging.getLogger("adam.update_image")
 		"""
 		Sets the icon to the appropriate image.
 		"""
@@ -145,6 +147,7 @@ class AdamMeter:
 			else:
 				percent = self.adamutil.percent_remaining
 				prefix = ""
+			log.debug("percent: %d", percent)
 
 			# No error
 			if percent > 87:

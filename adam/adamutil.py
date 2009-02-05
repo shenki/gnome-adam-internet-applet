@@ -39,7 +39,7 @@ class AdamUtil:
 		Initalize the Adam utility class
 		"""
 		logging.basicConfig(level=logging.DEBUG)
-		self.log = logging.getLogger("adamutil")
+		log = logging.getLogger("adamutil")
 
 		self.username = ""
 		self.password = ""
@@ -68,6 +68,8 @@ class AdamUtil:
 		"""
 		Updates data, regardless of currently held data
 		"""
+		log = logging.getLogger("adamutil.do_update")
+
 		try:
 			log.info("Fetching data")
 			auth = urllib2.HTTPBasicAuthHandler()
@@ -79,11 +81,11 @@ class AdamUtil:
 			data = opener.open('https://members.adam.com.au/um1.6/usage.xml')
 
 		except IOError:
-			self.log.error("Failed to fetch usage data.")
-			self.log.exception()
+			log.error("Failed to fetch usage data.")
+			log.exception()
 
 		try:
-			self.log.info("Parsing data")
+			log.info("Parsing data")
 
 			s = soup(data.read())
 			quota_str = s.find("megabytequota").string
@@ -94,52 +96,61 @@ class AdamUtil:
 			last_update_str = s.find("lastupdate").string
 			next_update_str = s.find("nextupdateestimate").string
 
-			self.log.debug("quota_str: ", quota_str)
-			self.log.debug("total_str: ", total_str)
-			self.log.debug("quota_str: ", external_str)
-			self.log.debug("upload_str: ", upload_str)
-			self.log.debug("date_str: ", date_str)
-			self.log.debug("last_update_str: ", last_update_str)
-			self.log.debug("next_update_str: ",next_update_str)
+			log.debug("quota_str: %s", quota_str)
+			log.debug("total_str: %s", total_str)
+			log.debug("quota_str: %s", external_str)
+			log.debug("upload_str: %s", upload_str)
+			log.debug("date_str: %s", date_str)
+			log.debug("last_update_str: %s", last_update_str)
+			log.debug("next_update_str: %s",next_update_str)
 
 
-
-			self.log.info("Converting strings to dates, ints, etc")
-
-			total = int(total_str)
+			log.info("Converting strings to dates, ints, etc")
 
 			self.start_date = dateparse(date_str)
 			self.last_update = dateparse(last_update_str)
 			self.next_update = dateparse(next_update_str)
 
-			self.log.info("dates")
+			log.info("Converting dates")
 
+			total = int(total_str)
 			self.external = int(external_str)
 			self.local = total - self.external
 			self.uploads = int(upload_str)
 			self.quota = int(quota_str)
 
-			self.log.info("data")
+			log.info("Converting data")
+
+			log.debug("external: %d", self.external)
+			log.debug("local: %d", self.local)
+			log.debug("uploads: %d", self.uploads)
+			log.debug("quota: %d", self.quota)
 
 			self.percent_remaining = int(round(
-				(self.external - self.quota) / self.quota * 100))
-			self.percent_used = int(round(self.external / self.quota * 100))
+				float(self.quota-self.external) / self.quota * 100))
+			self.percent_used = int(round(
+				float(self.external) / self.quota * 100))
 			self.used = self.external
-			self.remaining = self.quota - self.external
+			self.remaining = self.quota-self.external
 
-			self.log.info("Data updated for ", self.username)
+			log.debug("percent_remaining: %d", self.percent_remaining)
+			log.debug("percent_used: %d", self.percent_used)
+
+			log.info("Data updated for %s", self.username)
 
 		except:
-			self.log.error = "Failed to extract usage data"
-			self.log.exception()
+			log.error = "Failed to extract usage data"
+			log.exception()
 			raise
 
 	def update(self):
 		"""
 		Updates data, first checking that there is no recent data
 		"""
-
-		if self.next_update <= self.time:
+		log = logging.getLogger("adamutil.update")
+		log.info("Checking weather to fetch data")
+		if self.next_update > self.last_update:
+			log.info("Fetching data")
 			self.do_update()
 
 class UpdateError(Exception):
