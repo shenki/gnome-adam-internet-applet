@@ -70,6 +70,7 @@ class AdamUtil:
 		Updates data, regardless of currently held data
 		"""
 		log = logging.getLogger("adamutil.do_update")
+		log.info("Starting update at %s", datetime.now())
 
 		try:
 			log.info("Fetching data")
@@ -142,7 +143,7 @@ class AdamUtil:
 
 			log.debug("daysleft: %d", self.daysleft)
 
-			log.info("Data updated for %s", self.username)
+			log.info("Update completed at %s", datetime.now())
 
 		except:
 			log.error("Failed to extract usage data")
@@ -154,6 +155,9 @@ class AdamUtil:
 		"""
 		log = logging.getLogger("adamutil.update")
 		log.info("Checking weather to fetch data")
+		log.info("Is %s > %s? %s", self.next_update, self.last_update,
+				self.next_update > self.last_update)
+
 		if self.next_update > self.last_update:
 			log.info("Fetching data")
 			self.do_update()
