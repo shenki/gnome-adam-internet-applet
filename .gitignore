@@ -1,1 +1,3 @@
 *.pyc
+adam/constants.py
+AdamUsageMeterApplet.server
