@@ -75,12 +75,12 @@ class AdamUtil:
 		try:
 			log.info("Fetching data")
 			auth = urllib2.HTTPBasicAuthHandler()
-			auth.add_password(realm='Adam Members Area External Access',
-					uri='https://members.adam.com.au',
+			auth.add_password(realm=WEB_REALM,
+					uri=WEB_URI,
 					user=self.username,
 					passwd=self.password)
 			opener = urllib2.build_opener(auth)
-			data = opener.open('https://members.adam.com.au/um1.6/usage.xml')
+			data = opener.open(WEB_DATA)
 
 		except IOError:
 			log.error("Failed to fetch usage data.")
@@ -90,13 +90,13 @@ class AdamUtil:
 			log.info("Parsing data")
 
 			s = soup(data.read())
-			quota_str = s.find("megabytequota").string
-			total_str = s.find("megabytesdownloadedtotal").string
-			external_str = s.find("megabytesdownloadedexternal").string
-			upload_str = s.find("megabytesuploadedtotal").string
-			date_str = s.find("quotastartdate").string
-			last_update_str = s.find("lastupdate").string
-			next_update_str = s.find("nextupdateestimate").string
+			quota_str = s.find(ADAM_XML_QUOTA).string
+			total_str = s.find(ADAM_XML_TOTAL).string
+			external_str = s.find(ADAM_XML_EXTERNAL).string
+			upload_str = s.find(ADAM_XML_UPLOAD).string
+			date_str = s.find(XML_START_DATE).string
+			last_update_str = s.find(XML_LAST_UPDATE).string
+			next_update_str = s.find(XML_NEXT_UPDATE).string
 
 			log.debug("quota_str: %s", quota_str)
 			log.debug("total_str: %s", total_str)

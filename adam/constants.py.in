@@ -31,6 +31,17 @@ ADAM_DESCRIPTION = 'Applet for monitoring your Adam ADSL usage.'
 
 ADAM_AUTHORS = [
     'Joel Stanley <joel@jms.id.au>',
-	'Sam Pohlenz <retrix@adam.on.net>',
-	'Chris Scobell <chris@thescobells.com>'
 	]
+
+WEB_DATA = 'https://members.adam.com.au/um1.6/usage.xml'
+WEB_URI = 'https://members.adam.com.au'
+WEB_REALM = 'Adam Members Area External Access'
+
+# XML tags
+XML_QUOTA = 'megabytequota'
+XML_TOTAL = 'megabytesdownloadedtotal'
+XML_EXTERNAL = 'megabytesdownloadedexternal'
+XML_UPLOAD = 'megabytesuploadedtotal'
+XML_START_DATE = 'quotastartdate'
+XML_LAST_UPDATE = 'lastupdate'
+XML_NEXT_UPDATE = 'nextupdateestimate'
