@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml-stylesheet type="text/xsl" href="usage.xsl"?>
+  <response>
+    <UsageMeter>
+      <Name>Adam Internet XML Usage Meter</Name>
+      <Version>1.6</Version>
+      <Disclaimer>XML Feed provided to you by Adam Internet to monitor your usage. This information is provided to you as a guide only and must not be relied upon as a commitment or authorative in nature.</Disclaimer>
+      <PreviousVersion>1.5</PreviousVersion>
+      <PreviousVersionURI>http://members.adam.com.au/um1.5/usage.xml</PreviousVersionURI>
+      <NextVersion></NextVersion>
+      <NextVersionURI></NextVersionURI>
+      <FrequentHitPenalty>0</FrequentHitPenalty>
+    </UsageMeter>
+    <Account>
+      <MegabyteQuota>10000</MegabyteQuota>
+      <NewsgroupQuota>10000</NewsgroupQuota>
+      <QuotaStartDate>2009-01-28</QuotaStartDate>
+      <PlanType>AdamDirect</PlanType>
+      <PlanSpeed>24000/1000</PlanSpeed>
+      <SubAccount>
+        <UserName>mleimann</UserName>
+        <MegabytesDownloadedTotal>1058</MegabytesDownloadedTotal>
+        <MegabytesDownloadedExternal>721</MegabytesDownloadedExternal>
+        <MegabytesUploadedTotal>126</MegabytesUploadedTotal>
+        <MegabytesNewsgroupTotal>0</MegabytesNewsgroupTotal>
+        <LastUpdate>2009-02-02T21:59:56+10:30</LastUpdate>
+        <NextUpdateEstimate>2009-02-02T23:50:03+10:30</NextUpdateEstimate>
+      </SubAccount>
+      <AdamTalk Username="fredsmith">
+        <DID Primary="true">0800000000</DID>
+      </AdamTalk>
+    </Account>
+  </response>
