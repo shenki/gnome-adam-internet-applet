@@ -46,16 +46,11 @@ try:
 	import gnome.ui
 	import gconf
 	import gobject
+	import gnomeapplet
 except ImportError:
 	print "Failed to open GNOME libraries."
 	print "Please ensure they are installed correctly."
 	sys.exit(1)
-
-if ADAM_GNOMEAPPLET == 'gnomeapplet':
-	import gnomeapplet
-else:
-	import gnome.applet
-	gnomeapplet = gnome.applet
 
 from adamutil import AdamUtil, UpdateError
 

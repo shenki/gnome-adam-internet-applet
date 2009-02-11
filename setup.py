@@ -19,18 +19,7 @@ outfile = open(os.path.join('adamlib', 'constants.py'), 'w')
 outfile.write(data)
 outfile.write("\nADAM_PREFIX = '%s'\n\n" % prefix)
 
-# Test whether we want to import the deprecated gnome.applet or
-# the newer gnomeapplet
-try:
-	import gnomeapplet
-	# Use gnomeapplet
-	outfile.write("\nADAM_GNOMEAPPLET = 'gnomeapplet'\n\n")
-except ImportError:
-	# Use (deprecated) gnome.applet
-	outfile.write("\nADAM_GNOMEAPPLET = 'gnome.applet'\n\n")
-
 outfile.close()
-
 
 # Write the install prefix to the AdamUsageMeterApplet.server file (bonobo)
 infile = open('AdamUsageMeterApplet.server.in')
