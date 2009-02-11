@@ -7,9 +7,9 @@ pygtk.require('2.0')
 
 import gtk
 
-import adam
+import adamlib
 
-if adam.constants.ADAM_GNOMEAPPLET == 'gnomeapplet':
+if adamlib.constants.ADAM_GNOMEAPPLET == 'gnomeapplet':
 	import gnomeapplet
 else:
 	import gnome.applet
@@ -20,7 +20,7 @@ def adam_factory(applet, iid):
 	Creates an Adam Usage Meter Applet
 	"""
 
-	adam.AdamMeter(applet, iid)
+	adamlib.AdamMeter(applet, iid)
 	return True
 
 

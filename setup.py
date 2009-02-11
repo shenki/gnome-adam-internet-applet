@@ -2,6 +2,7 @@ import os
 import sys
 
 from distutils.core import setup
+from adamlib.constants import *
 
 # Get the install prefix and write to the constants file
 prefix = sys.prefix
@@ -10,11 +11,11 @@ for arg in sys.argv:
 				prefix = arg[9:]
 				prefix = os.path.expandvars(prefix)
 
-infile = open(os.path.join('adam', 'constants.py.in'))
+infile = open(os.path.join('adamlib', 'constants.py.in'))
 data = infile.read()
 infile.close()
 
-outfile = open(os.path.join('adam', 'constants.py'), 'w')
+outfile = open(os.path.join('adamlib', 'constants.py'), 'w')
 outfile.write(data)
 outfile.write("\nADAM_PREFIX = '%s'\n\n" % prefix)
 
@@ -40,7 +41,6 @@ outfile = open('AdamUsageMeterApplet.server', 'w')
 outfile.write(data)
 outfile.close()
 
-from adam.constants import *
 
 # Do the setup routine
 setup(name = ADAM_NAME,
@@ -49,9 +49,9 @@ setup(name = ADAM_NAME,
 	  url = ADAM_URL,
 	  author = ADAM_AUTHORS[0].split('<')[0],
 	  author_email = ADAM_AUTHORS[0],
-	  license = 'GPL',
-	  packages = ['adam'],
-	  scripts = ['adam-applet.py'],
+	  license = 'GPL3',
+	  packages = ['adamlib'],
+	  scripts = ['adam-applet'],
 	  data_files = [('lib/bonobo/servers', ['AdamUsageMeterApplet.server']),
 	  				('share/adam', ['adam-applet.glade', 'menu.xml']),
 					('share/adam/pixmaps', ['pixmaps/adam-0.png',

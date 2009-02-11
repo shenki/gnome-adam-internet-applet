@@ -1,25 +1,19 @@
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-#                                                                             #
-# adamutil.py - Support file for the                                          #
-#               GNOME ADSL Adam Usage Meter Panel Applet                 #
-#                                                                             #
-# Copyright (C) 2005  Sam Pohlenz <retrix@adam.on.net>                   #
-#                                                                             #
-# This program is free software; you can redistribute it and/or               #
-# modify it under the terms of the GNU General Public License                 #
-# as published by the Free Software Foundation; either version 2              #
-# of the License, or (at your option) any later version.                      #
-#                                                                             #
-# This program is distributed in the hope that it will be useful,             #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of              #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               #
-# GNU General Public License for more details.                                #
-#                                                                             #
-# You should have received a copy of the GNU General Public License           #
-# along with this program; if not, write to the Free Software                 #
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. #
-#                                                                             #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+# -*- coding: utf-8 -*-
+#
+# Copyright 2009 Joel Stanley <joel@jms.id.au>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib2
 from BeautifulSoup import BeautifulSoup as soup
@@ -75,23 +69,25 @@ class AdamUtil:
 		try:
 			log.info("Fetching data")
 			auth = urllib2.HTTPBasicAuthHandler()
-			auth.add_password(realm=WEB_REALM,
-					uri=WEB_URI,
+			auth.add_password(realm=constants.WEB_REALM,
+					uri=constants.WEB_URI,
 					user=self.username,
 					passwd=self.password)
 			opener = urllib2.build_opener(auth)
-			data = opener.open(WEB_DATA)
+			data = opener.open(constants.WEB_DATA)
 
 		except IOError:
-			log.error("Failed to fetch usage data.")
-			log.exception()
+			log.exception("Failed to fetch usage data.")
+		except:
+			log.exception("Unknown error when fetching usage data")
+			raise
 
 		try:
 			log.info("Parsing data")
 
 			s = soup(data.read())
-			quota_str = s.find(ADAM_XML_QUOTA).string
-			total_str = s.find(ADAM_XML_TOTAL).string
+			quota_str = s.find(constants.ADAM_XML_QUOTA).string
+			total_str = s.find(constants.ADAM_XML_TOTAL).string
 			external_str = s.find(ADAM_XML_EXTERNAL).string
 			upload_str = s.find(ADAM_XML_UPLOAD).string
 			date_str = s.find(XML_START_DATE).string
@@ -146,7 +142,7 @@ class AdamUtil:
 			log.info("Update completed at %s", datetime.now())
 
 		except:
-			log.error("Failed to extract usage data")
+			log.error("Failed to extract usage data.")
 			raise
 
 	def update(self):
