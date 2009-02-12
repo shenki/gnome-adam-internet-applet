@@ -19,13 +19,14 @@
 #
 
 import urllib2
+import logging
 from BeautifulSoup import BeautifulSoup as soup
 from dateutil.parser import parse as dateparse
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, date
-from adamlib.constants import *
-
-import logging
+from adamlib.constants import XML_QUOTA, XML_TOTAL, XML_EXTERNAL, \
+        XML_UPLOAD, XML_START_DATE, XML_LAST_UPDATE, XML_NEXT_UPDATE, \
+        WEB_REALM, WEB_URI, WEB_DATA
 
 class AdamUtil:
     """
@@ -36,7 +37,7 @@ class AdamUtil:
     def __init__(self):
         logging.basicConfig(level=logging.DEBUG)
         log = logging.getLogger("adamutil")
-        log.info("Initalising");
+        log.info("Initalising")
 
         self.username = ""
         self.password = ""
@@ -91,14 +92,14 @@ class AdamUtil:
         try:
             log.info("Parsing data")
 
-            s = soup(data.read())
-            quota_str = s.find(XML_QUOTA).string
-            total_str = s.find(XML_TOTAL).string
-            external_str = s.find(XML_EXTERNAL).string
-            upload_str = s.find(XML_UPLOAD).string
-            date_str = s.find(XML_START_DATE).string
-            last_update_str = s.find(XML_LAST_UPDATE).string
-            next_update_str = s.find(XML_NEXT_UPDATE).string
+            xml = soup(data.read())
+            quota_str = xml.find(XML_QUOTA).string
+            total_str = xml.find(XML_TOTAL).string
+            external_str = xml.find(XML_EXTERNAL).string
+            upload_str = xml.find(XML_UPLOAD).string
+            date_str = xml.find(XML_START_DATE).string
+            last_update_str = xml.find(XML_LAST_UPDATE).string
+            next_update_str = xml.find(XML_NEXT_UPDATE).string
 
             log.debug("quota_str: %s", quota_str)
             log.debug("total_str: %s", total_str)
@@ -106,7 +107,7 @@ class AdamUtil:
             log.debug("upload_str: %s", upload_str)
             log.debug("date_str: %s", date_str)
             log.debug("last_update_str: %s", last_update_str)
-            log.debug("next_update_str: %s",next_update_str)
+            log.debug("next_update_str: %s", next_update_str)
 
 
             log.info("Converting strings to dates, ints, etc")
@@ -150,7 +151,7 @@ class AdamUtil:
             self.error = False
         except:
             log.exception("Failed to extract usage data from XML.")
-            raise UpdateError("Failed to extract usage data from XML.")
+            raise Exception("Failed to extract usage data from XML.")
 
     def update(self):
         """

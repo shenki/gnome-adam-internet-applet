@@ -18,20 +18,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
 import os
 import logging
 import gtk
 import gtk.glade
-import gtk.gdk
-import pygtk
 import gnome.ui
 import gconf
 import gobject
 import gnomeapplet
 
 from adamutil import AdamUtil
-from constants import *
+from constants import ADAM_NAME, ADAM_VERSION, ADAM_COPYRIGHT, \
+        ADAM_DESCRIPTION, ADAM_AUTHORS, ADAM_PREFIX
+ 
 
 class AdamMeter:
 
@@ -150,14 +149,10 @@ class AdamMeter:
         """
         Sets or unsets the timeout to automatically update the usage meter
         """
-
-        if enable:
-            self.timeout = gobject.timeout_add(interval, self.update, self)
-        else:
-            gobject.timeout_remove(self.timeout)
+        self.timeout = gobject.timeout_add(interval, self.update, self)
 
 
-    def update(self, widget = None, data = None):
+    def update(self, widget=False, data=False):
         """
         Fetches the latest usage information and updates the display
         """
@@ -183,12 +178,13 @@ class AdamMeter:
                 daystring = 'days'
 
             tiptext = "%.2f/%iMB %s\n%i %s remaining" % \
-                (usage, self.adamutil.quota, status, self.adamutil.daysleft, daystring)
+                (usage, self.adamutil.quota, status, self.adamutil.daysleft,
+                        daystring)
 
-        except Exception, e:
+        except Exception, err:
             # An error occurred
             self.label.set_text("??%")
-            tiptext = str(e)
+            tiptext = str(err)
             self.update_image()
 
         self.tooltips.set_tip(self.eventbox, tiptext)
@@ -197,7 +193,7 @@ class AdamMeter:
         return True
 
 
-    def show_about(self, widget = None, data = None):
+    def show_about(self, widget, data):
         """
         Displays the About dialog
         """
@@ -206,9 +202,9 @@ class AdamMeter:
             ADAM_DESCRIPTION, ADAM_AUTHORS, None,
             None, self.logo)
 
-        result = about.run()
+        about.run()
 
-    def show_prefs(self, widget = None, data = None):
+    def show_prefs(self, widget, data):
         """
         Displays the Preferences dialog
         """
@@ -235,7 +231,9 @@ class AdamMeter:
             self.adamutil.password = passtext.get_text()
             self.adamutil.show_used = used.get_active()
             self.write_prefs()
-            self.update()
+
+            # updating here causes a delay after pressing OK  
+            #self.update()
 
         preferences.destroy()
 
@@ -274,7 +272,7 @@ class AdamMeter:
             self.adamutil.password = password
             self.adamutil.show_used = show_used
             self.update()
-            self.set_timeout(True)
+            self.set_timeout()
 
 
     def change_background(self, applet, bg_type, color, pixmap):

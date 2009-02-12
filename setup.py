@@ -6,11 +6,11 @@ from distutils.core import setup
 # Get the install prefix and write to the constants file
 prefix = sys.prefix
 for arg in sys.argv:
-        if arg.startswith('--prefix='):
-                prefix = arg[9:]
-                prefix = os.path.expandvars(prefix)
+    if arg.startswith('--prefix='):
+        prefix = arg[9:]
+        prefix = os.path.expandvars(prefix)
 
-prefix = "/home/shenki/src/adam-applet.git/build"
+prefix = "/home/shenki/src/adam-applet.git"
 
 infile = open(os.path.join('adamlib', 'constants.py.in'))
 data = infile.read()
@@ -44,18 +44,19 @@ setup(name = ADAM_NAME,
       license = 'GPL3',
       packages = ['adamlib'],
       scripts = ['adam-applet'],
-      data_files = [('lib/bonobo/servers', ['AdamUsageMeterApplet.server']),
-                    ('share/adam', ['adam-applet.glade', 'menu.xml']),
-                    ('share/adam/pixmaps', ['pixmaps/adam-0.png',
-                                                 'pixmaps/adam-25.png',
-                                                 'pixmaps/adam-50.png',
-                                                 'pixmaps/adam-75.png',
-                                                 'pixmaps/adam-100.png',
-                                                 'pixmaps/adam-u0.png',
-                                                 'pixmaps/adam-u25.png',
-                                                 'pixmaps/adam-u75.png',
-                                                 'pixmaps/adam-u100.png',
-                                                 'pixmaps/adam-x.png',
-                                                 'pixmaps/adam-applet.png',
-                                                 'pixmaps/logo.png']), ]
-      )
+	  data_files = [('lib/bonobo/servers', ['AdamUsageMeterApplet.server']),
+		  ('share/adam', ['adam-applet.glade', 'menu.xml']),
+		  ('share/adam/pixmaps',
+			  ['pixmaps/adam-0.png',
+			  'pixmaps/adam-25.png',
+			  'pixmaps/adam-50.png',
+			  'pixmaps/adam-75.png',
+			  'pixmaps/adam-100.png',
+			  'pixmaps/adam-u0.png',
+			  'pixmaps/adam-u25.png',
+			  'pixmaps/adam-u75.png',
+			  'pixmaps/adam-u100.png',
+			  'pixmaps/adam-x.png',
+			  'pixmaps/adam-applet.png',
+			  'pixmaps/logo.png']), ]
+		  )
