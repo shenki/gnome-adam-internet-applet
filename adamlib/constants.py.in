@@ -33,6 +33,8 @@ ADAM_AUTHORS = [
     'Joel Stanley <joel@jms.id.au>',
 	]
 
+ERRORMESSAGE = "Unable to fetch usage data from Adam's server."
+
 WEB_DATA = 'https://members.adam.com.au/um1.6/usage.xml'
 WEB_URI = 'https://members.adam.com.au'
 WEB_REALM = 'Adam Members Area External Access'

@@ -2,7 +2,6 @@ import os
 import sys
 
 from distutils.core import setup
-from adamlib.constants import *
 
 # Get the install prefix and write to the constants file
 prefix = sys.prefix
@@ -10,6 +9,8 @@ for arg in sys.argv:
 		if arg.startswith('--prefix='):
 				prefix = arg[9:]
 				prefix = os.path.expandvars(prefix)
+
+prefix = "/home/shenki/src/adam-applet.git/build"
 
 infile = open(os.path.join('adamlib', 'constants.py.in'))
 data = infile.read()
@@ -30,6 +31,7 @@ outfile = open('AdamUsageMeterApplet.server', 'w')
 outfile.write(data)
 outfile.close()
 
+from adamlib.constants import *
 
 # Do the setup routine
 setup(name = ADAM_NAME,

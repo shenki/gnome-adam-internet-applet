@@ -19,19 +19,13 @@
 #
 
 import sys
-
+import gtk
 import pygtk
 pygtk.require('2.0')
 
-import gtk
+import gnomeapplet
 
 import adamlib
-
-if adamlib.constants.ADAM_GNOMEAPPLET == 'gnomeapplet':
-	import gnomeapplet
-else:
-	import gnome.applet
-	gnomeapplet = gnome.applet
 
 def adam_factory(applet, iid):
 	"""
@@ -40,7 +34,6 @@ def adam_factory(applet, iid):
 
 	adamlib.AdamMeter(applet, iid)
 	return True
-
 
 
 if len(sys.argv) == 2 and sys.argv[1] == "--window":

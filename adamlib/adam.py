@@ -21,39 +21,17 @@
 import sys
 import os
 import logging
+import gtk
+import gtk.glade
+import gtk.gdk
+import pygtk
+import gnome.ui
+import gconf
+import gobject
+import gnomeapplet
 
+from adamutil import AdamUtil
 from constants import *
-
-try:
-	if not sys.modules.has_key('gtk'):
-		import pygtk
-		pygtk.require('2.0')
-except ImportError:
-	print "Failed to open PyGTK libraries."
-	print "Please ensure they are installed correctly."
-	sys.exit(1)
-
-try:
-	import gtk
-	import gtk.glade
-	import gtk.gdk
-except ImportError:
-	print "Failed to open GTKGlade libraries."
-	print "Please ensure they are installed correctly."
-	sys.exit(1)
-
-try:
-	import gnome.ui
-	import gconf
-	import gobject
-	import gnomeapplet
-except ImportError:
-	print "Failed to open GNOME libraries."
-	print "Please ensure they are installed correctly."
-	sys.exit(1)
-
-from adamutil import AdamUtil, UpdateError
-
 
 class AdamMeter:
 
@@ -109,19 +87,29 @@ class AdamMeter:
 		self.icons = {}
 
 		# Show Percentage Remaining icons
-		self.icons["0"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-0.png")
-		self.icons["25"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-25.png")
-		self.icons["50"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-50.png")
-		self.icons["75"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-75.png")
-		self.icons["100"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-100.png")
-		self.icons["x"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-x.png")
+		self.icons["0"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-0.png")
+		self.icons["25"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-25.png")
+		self.icons["50"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-50.png")
+		self.icons["75"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-75.png")
+		self.icons["100"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-100.png")
+		self.icons["x"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-x.png")
 
 		# Show Percentage Used icons
-		self.icons["u0"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-u0.png")
-		self.icons["u25"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-u25.png")
+		self.icons["u0"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-u0.png")
+		self.icons["u25"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-u25.png")
 		self.icons["u50"] = self.icons["50"]
-		self.icons["u75"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-u75.png")
-		self.icons["u100"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/adam-u100.png")
+		self.icons["u75"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-u75.png")
+		self.icons["u100"] = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir +
+				"/adam-u100.png")
 
 		# About logo
 		self.logo = gtk.gdk.pixbuf_new_from_file(self.pixmap_dir + "/logo.png")
@@ -133,7 +121,11 @@ class AdamMeter:
 		Sets the icon to the appropriate image.
 		"""
 
-		if self.adamutil.error == "":
+		if self.adamutil.error: 
+			# Show error image
+			self.image.set_from_pixbuf(self.icons["x"])
+
+		else:
 			if self.adamutil.show_used:
 				percent = self.adamutil.percent_used
 				prefix = "u"
@@ -153,10 +145,6 @@ class AdamMeter:
 				self.image.set_from_pixbuf(self.icons[prefix + "25"])
 			else:
 				self.image.set_from_pixbuf(self.icons[prefix + "0"])
-		else:
-			# Show error image
-			self.image.set_from_pixbuf(self.icons["x"])
-
 
 	def set_timeout(self, enable = True, interval = 3600000):
 		"""
@@ -197,10 +185,10 @@ class AdamMeter:
 			tiptext = "%.2f/%iMB %s\n%i %s remaining" % \
 				(usage, self.adamutil.quota, status, self.adamutil.daysleft, daystring)
 
-		except UpdateError:
+		except Exception, e:
 			# An error occurred
 			self.label.set_text("??%")
-			tiptext = self.adamutil.error
+			tiptext = str(e)
 			self.update_image()
 
 		self.tooltips.set_tip(self.eventbox, tiptext)
@@ -257,9 +245,12 @@ class AdamMeter:
 		Writes the username and password to the GConf registry
 		"""
 
-		self.gconf_client.set_string("/apps/adam-applet/username", self.adamutil.username)
-		self.gconf_client.set_string("/apps/adam-applet/password", self.adamutil.password)
-		self.gconf_client.set_bool("/apps/adam-applet/show_used", self.adamutil.show_used)
+		self.gconf_client.set_string("/apps/adam-applet/username",
+				self.adamutil.username)
+		self.gconf_client.set_string("/apps/adam-applet/password",
+				self.adamutil.password)
+		self.gconf_client.set_bool("/apps/adam-applet/show_used",
+				self.adamutil.show_used)
 
 
 	def load_prefs(self):

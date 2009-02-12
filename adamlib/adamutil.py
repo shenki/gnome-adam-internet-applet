@@ -23,6 +23,7 @@ from BeautifulSoup import BeautifulSoup as soup
 from dateutil.parser import parse as dateparse
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, date
+from adamlib.constants import *
 
 import logging
 
@@ -33,18 +34,16 @@ class AdamUtil:
 	"""
 
 	def __init__(self):
-		"""
-		Initalize the Adam utility class
-		"""
 		logging.basicConfig(level=logging.DEBUG)
 		log = logging.getLogger("adamutil")
+		log.info("Initalising");
 
 		self.username = ""
 		self.password = ""
 		self.show_used = False
 		self.time = datetime.now()
 
-		self.error = ""
+		self.error = True
 
 		self.percent_used = 0
 		self.percent_remaining = 0
@@ -69,30 +68,34 @@ class AdamUtil:
 		log = logging.getLogger("adamutil.do_update")
 		log.info("Starting update at %s", datetime.now())
 
+		self.error = True
+
 		try:
 			log.info("Fetching data")
 			auth = urllib2.HTTPBasicAuthHandler()
-			auth.add_password(realm=constants.WEB_REALM,
-					uri=constants.WEB_URI,
+			auth.add_password(realm=WEB_REALM,
+					uri=WEB_URI,
 					user=self.username,
 					passwd=self.password)
 			opener = urllib2.build_opener(auth)
-			data = opener.open(constants.WEB_DATA)
+			data = opener.open(WEB_DATA)
 
 		except IOError:
 			log.exception("Failed to fetch usage data.")
+			raise Exception("Failed to fetch usage data.")
+
 		except:
 			log.exception("Unknown error when fetching usage data")
-			raise
+			raise Exception("Unknown error when fetching usage data")
 
 		try:
 			log.info("Parsing data")
 
 			s = soup(data.read())
-			quota_str = s.find(constants.ADAM_XML_QUOTA).string
-			total_str = s.find(constants.ADAM_XML_TOTAL).string
-			external_str = s.find(ADAM_XML_EXTERNAL).string
-			upload_str = s.find(ADAM_XML_UPLOAD).string
+			quota_str = s.find(XML_QUOTA).string
+			total_str = s.find(XML_TOTAL).string
+			external_str = s.find(XML_EXTERNAL).string
+			upload_str = s.find(XML_UPLOAD).string
 			date_str = s.find(XML_START_DATE).string
 			last_update_str = s.find(XML_LAST_UPDATE).string
 			next_update_str = s.find(XML_NEXT_UPDATE).string
@@ -144,9 +147,10 @@ class AdamUtil:
 
 			log.info("Update completed at %s", datetime.now())
 
+			self.error = False
 		except:
-			log.error("Failed to extract usage data.")
-			raise
+			log.exception("Failed to extract usage data from XML.")
+			raise UpdateError("Failed to extract usage data from XML.")
 
 	def update(self):
 		"""
@@ -160,10 +164,3 @@ class AdamUtil:
 		if self.next_update > self.last_update:
 			log.info("Fetching data")
 			self.do_update()
-
-class UpdateError(Exception):
-	"""
-	Exception class to handle update errors
-	"""
-
-	pass
