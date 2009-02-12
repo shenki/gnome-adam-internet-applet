@@ -3,6 +3,7 @@
 #
 # GNOME Adam Internet Applet
 # Copyright 2009 Joel Stanley <joel@jms.id.au>
+# Copyright 2005 Sam Pohlenz <retrix@internode.on.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,6 +34,10 @@ from constants import ADAM_NAME, ADAM_VERSION, ADAM_COPYRIGHT, \
  
 
 class AdamMeter:
+    """
+    Controls drawing of applet contents, as well as dialogs.  Contains
+    a timer to periodicly query for updated usage data
+    """
 
     ui_dir = os.path.join(ADAM_PREFIX, 'share', 'adam')
     pixmap_dir = os.path.join(ui_dir, 'pixmaps')
@@ -277,7 +282,8 @@ class AdamMeter:
 
     def change_background(self, applet, bg_type, color, pixmap):
         """
-        Changes the background of the applet when the panel's background changes.
+        Changes the background of the applet when the panel's background
+        changes.
         """
 
         applet.set_style(None)

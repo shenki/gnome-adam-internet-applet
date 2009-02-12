@@ -3,6 +3,7 @@
 #
 # GNOME Adam Internet Applet
 # Copyright 2009 Joel Stanley <joel@jms.id.au>
+# Copyright 2005 Sam Pohlenz <retrix@internode.on.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
