@@ -31,7 +31,8 @@ outfile = open('AdamUsageMeterApplet.server', 'w')
 outfile.write(data)
 outfile.close()
 
-from adamlib.constants import *
+from adamlib.constants import ADAM_NAME, ADAM_VERSION, ADAM_DESCRIPTION, \
+		ADAM_URL, ADAM_AUTHORS
 
 # Do the setup routine
 setup(name = ADAM_NAME,
