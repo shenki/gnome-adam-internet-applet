@@ -1,7 +1,7 @@
 include README
 include INSTALL
 include COPYING
-include data/AdamUsageMeterApplet.server.in
+include data/AdamUsageMeterApplet.server
 include data/menu.xml
 include data/EXAMPLE.xml
 include data/adam-applet.glade
