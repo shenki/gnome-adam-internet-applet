@@ -1,14 +1,14 @@
 <oaf_info>
 	<oaf_server iid="OAFIID:AdamUsageMeterApplet_Factory"
-		type="exe" location="@PREFIX@/bin/adam-applet.py">
+		type="exe" location="@PREFIX@/bin/adam-applet">
 
 		<oaf_attribute name="repo_ids" type="stringv">
 			<item value="IDL:Bonobo/GenericFactory:1.0"/>
 			<item value="IDL:Bonobo/Unknown:1.0"/>
 		</oaf_attribute>
 
-		<oaf_attribute name="name" type="string" value="Adam Usage Meter Applet"/>
-		<oaf_attribute name="description" type="string" value="Monitors Adam ADSL Usage"/>
+		<oaf_attribute name="name" type="string" value="Adam Internet Usage Meter"/>
+		<oaf_attribute name="description" type="string" value="Monitors Adam Internet ADSL Usage"/>
 	</oaf_server>
 
 	<oaf_server iid="OAFIID:AdamUsageMeterApplet"
