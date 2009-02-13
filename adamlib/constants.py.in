@@ -19,7 +19,7 @@
 #
 
 
-ADAM_NAME = 'Adam Usage Meter'
+ADAM_NAME = 'gnome-adam-internet-meter'
 
 ADAM_URL = 'http://jms.id.au/wiki/AdamUsageMeter'
 
