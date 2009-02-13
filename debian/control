@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5.0.38)
 Build-Depends-Indep: python, python-all, python-central (>= 0.5.6)
 Standards-Version: 3.7.2
 
-Package: webboard
+Package: gnome-adam-internet-applet
 Architecture: all
 Depends: ${python:Depends}, ${shlibs:Depends}, python-gtk2, python-glade2, python-gnome2, python-gnome2-desktop, python-dateparse, python-beautifulsoup
 Section: utils
