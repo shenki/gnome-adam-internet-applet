@@ -5,11 +5,10 @@ from distutils.core import setup
 # Get the install prefix and write to the constants file
 prefix = sys.prefix
 
-# TODO: This doesn't work - patches welcome
-#for arg in sys.argv:
-#    if arg.startswith('--prefix='):
-#        prefix = arg[9:]
-#        prefix = os.path.expandvars(prefix)
+for arg in sys.argv:
+    if arg.startswith('--prefix='):
+        prefix = arg[:9]
+        prefix = os.path.expandvars(prefix)
 
 infile = open(os.path.join('adamlib', 'constants.py.in'))
 data = infile.read()
@@ -22,11 +21,11 @@ outfile.write("\nADAM_PREFIX = '%s'\n\n" % prefix)
 outfile.close()
 
 # Write the install prefix to the AdamUsageMeterApplet.server file (bonobo)
-infile = open('AdamUsageMeterApplet.server.in')
+infile = open(os.path.join('data', 'AdamUsageMeterApplet.server.in'))
 data = infile.read().replace('@PREFIX@', prefix)
 infile.close()
 
-outfile = open('AdamUsageMeterApplet.server', 'w')
+outfile = open(os.path.join('data','AdamUsageMeterApplet.server'), 'w')
 outfile.write(data)
 outfile.close()
 
@@ -43,8 +42,9 @@ setup(name = ADAM_NAME,
         license = 'GPL3',
         packages = ['adamlib'],
         scripts = ['adam-applet'],
-        data_files = [('lib/bonobo/servers', ['AdamUsageMeterApplet.server']),
-            ('share/adam', ['adam-applet.glade', 'menu.xml']),
+        data_files = [
+            ('lib/bonobo/servers', ['data/AdamUsageMeterApplet.server']),
+            ('share/adam', ['data/adam-applet.glade', 'data/menu.xml']),
             ('share/adam/pixmaps',
                 ['pixmaps/adam-0.png',
                     'pixmaps/adam-25.png',
