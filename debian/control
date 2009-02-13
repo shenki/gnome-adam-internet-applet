@@ -15,4 +15,4 @@ XB-Python-Version: ${python:Versions}
 Description: Usage meter Adam Internet ADSL customers
  GNOME Adam Internet Applet is panel applet that displays
  monthy download usage and days remaining for the current
- billing peroid for Adam ADSL customers.
+ billing peroid for Adam Internet ADSL customers.
