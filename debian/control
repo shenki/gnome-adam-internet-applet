@@ -1,0 +1,18 @@
+Source: gnome-adam-internet-applet
+Section: gnome
+Priority: optional
+Maintainer: Joel Stanley <joel@jms.id.au>
+XS-Python-Version: current
+Build-Depends: debhelper (>= 5.0.38)
+Build-Depends-Indep: python, python-all, python-central (>= 0.5.6)
+Standards-Version: 3.7.2
+
+Package: webboard
+Architecture: all
+Depends: ${python:Depends}, ${shlibs:Depends}, python-gtk2, python-glade2, python-gnome2, python-gnome2-desktop, python-dateparse, python-beautifulsoup
+Section: utils
+XB-Python-Version: ${python:Versions}
+Description: Usage meter Adam Internet ADSL customers
+ GNOME Adam Internet Applet is panel applet that displays
+ monthy download usage and days remaining for the current
+ billing peroid for Adam ADSL customers.
