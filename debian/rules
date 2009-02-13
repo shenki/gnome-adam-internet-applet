@@ -61,8 +61,8 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/webboard.
-	./setup.py install --prefix=$(CURDIR)/debian/webboard/usr
+	# Add here commands to install the package into debian/g-a-i-a.
+	./setup.py install --prefix=$(CURDIR)/debian/gnome-adam-internet-applet/usr
 
 
 # Build architecture-independent files here.
