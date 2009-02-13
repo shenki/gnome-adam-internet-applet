@@ -9,7 +9,7 @@ Standards-Version: 3.7.2
 
 Package: gnome-adam-internet-applet
 Architecture: all
-Depends: ${python:Depends}, ${shlibs:Depends}, python-gtk2, python-glade2, python-gnome2, python-gnome2-desktop, python-dateparse, python-beautifulsoup
+Depends: ${python:Depends}, ${shlibs:Depends}, python-gtk2, python-glade2, python-gnome2, python-gnome2-desktop, python-dateutil, python-beautifulsoup
 Section: utils
 XB-Python-Version: ${python:Versions}
 Description: Usage meter Adam Internet ADSL customers
