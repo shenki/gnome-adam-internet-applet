@@ -7,10 +7,11 @@ from distutils.core import setup
 # Get the install prefix and write to the constants file
 prefix = sys.prefix
 
-for arg in sys.argv:
-    if arg.startswith('--prefix='):
-        prefix = arg[9:]
-        prefix = os.path.expandvars(prefix)
+# FIXME: this breaks building debian packages
+#for arg in sys.argv:
+#    if arg.startswith('--prefix='):
+#        prefix = arg[9:]
+#        prefix = os.path.expandvars(prefix)
 
 infile = open(os.path.join('adamlib', 'constants.py.in'))
 data = infile.read()
