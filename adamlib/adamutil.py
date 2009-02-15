@@ -28,6 +28,7 @@ from datetime import datetime, date
 from adamlib.constants import XML_QUOTA, XML_TOTAL, XML_EXTERNAL, \
         XML_UPLOAD, XML_START_DATE, XML_LAST_UPDATE, XML_NEXT_UPDATE, \
         WEB_REALM, WEB_URI, WEB_DATA
+import dbus
 
 class AdamUtil:
     """
@@ -166,3 +167,17 @@ class AdamUtil:
         if self.next_update > self.last_update:
             log.info("Fetching data")
             self.do_update()
+
+    def monitor_nm():
+        bus = dbus.SystemBus()
+        bus.add_signal_reciever(dev_changed,
+                interface_keyword="dbus_interface",
+                member_keyword="member")
+
+    def dev_changed():
+        if not kwargs["member"] == "DeviceNowActive":
+            return
+
+        # network connection just became active, attempt an update
+        do_update()
+
