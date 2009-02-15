@@ -182,9 +182,11 @@ class AdamMeter:
             else:
                 daystring = 'days'
 
-            tiptext = "%.2f/%iMB %s\n%i %s remaining" % \
-                (usage, self.adamutil.quota, status, self.adamutil.daysleft,
-                        daystring)
+            tiptext =  "%i MB external.\n" % self.adamutil.external
+            tiptext += "%i MB local.\n" % self.adamutil.local
+            tiptext += "%i MB upload.\n" % self.adamutil.uploads
+            tiptext += "%i MB quota.\n" % self.adamutil.quota
+            tiptext += "%i %s remaining." % (self.adamutil.daysleft, daystring)
 
         except Exception, err:
             # An error occurred
