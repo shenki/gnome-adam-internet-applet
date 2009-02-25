@@ -81,7 +81,7 @@ class AdamMeter:
 
         # Connect background callback
         applet.connect("change_background", self.change_background)
-
+        self.adamutil.monitor_nm()
 
     def init_images(self):
         """

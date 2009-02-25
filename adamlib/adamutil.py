@@ -168,16 +168,23 @@ class AdamUtil:
             log.info("Fetching data")
             self.do_update()
 
-    def monitor_nm():
+    def monitor_nm(self):
+        log = logging.getLogger("adamutil.update")
+        log.info("Setting up network manager monitor")
         bus = dbus.SystemBus()
-        bus.add_signal_reciever(dev_changed,
+        bus.add_signal_receiver(self.dev_changed,
                 interface_keyword="dbus_interface",
                 member_keyword="member")
+        log.info("Sucessfully set up network manager monitor")
 
-    def dev_changed():
+    def dev_changed(self, *args, **kwargs):
+        log = logging.getLogger("adamutil.dev_changed")
+
+        log.info("Network manager changed state")
         if not kwargs["member"] == "DeviceNowActive":
             return
 
+        log.info("Updating due to network interface becoming active")
         # network connection just became active, attempt an update
-        do_update()
+        self.do_update()
 
