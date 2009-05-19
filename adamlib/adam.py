@@ -125,7 +125,7 @@ class AdamMeter:
         Sets the icon to the appropriate image.
         """
 
-        if self.adamutil.error: 
+        if self.adamutil.error:
             # Show error image
             self.image.set_from_pixbuf(self.icons["x"])
 
@@ -168,11 +168,11 @@ class AdamMeter:
 
             if self.adamutil.show_used:
                 percent = self.adamutil.percent_used
-                usage = self.adamutil.external
+                usage = self.adamutil.peak
                 status = "used"
             else:
                 percent = self.adamutil.percent_remaining
-                usage = self.adamutil.quota - self.adamutil.external
+                usage = self.adamutil.quota - self.adamutil.peak
                 status = "remaining"
 
             self.label.set_text("%i%%" % percent)
@@ -182,8 +182,8 @@ class AdamMeter:
             else:
                 daystring = 'days'
 
-            tiptext =  "%i MB external.\n" % self.adamutil.external
-            tiptext += "%i MB local.\n" % self.adamutil.local
+            tiptext =  "%i MB peak.\n" % self.adamutil.peak
+            tiptext += "%i MB offpeak.\n" % self.adamutil.offpeak
             tiptext += "%i MB upload.\n" % self.adamutil.uploads
             tiptext += "%i MB quota.\n" % self.adamutil.quota
             tiptext += "%i %s remaining." % (self.adamutil.daysleft, daystring)
