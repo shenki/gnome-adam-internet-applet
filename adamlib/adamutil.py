@@ -25,7 +25,7 @@ from BeautifulSoup import BeautifulSoup as soup
 from dateutil.parser import parse as dateparse
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, date
-from adamlib.constants import XML_QUOTA, XML_TOTAL, XML_EXTERNAL, \
+from adamlib.constants import XML_QUOTA, XML_PEAK, XML_OFFPEAK, \
         XML_UPLOAD, XML_START_DATE, XML_LAST_UPDATE, XML_NEXT_UPDATE, \
         WEB_REALM, WEB_URI, WEB_DATA
 
@@ -58,7 +58,7 @@ class AdamUtil:
         self.last_update = datetime.min
         self.next_update = datetime.now()
 
-        self.local = 0
+        self.offpeak = 0
         self.external = 0
         self.uploads = 0
         self.quota = 0
@@ -95,21 +95,20 @@ class AdamUtil:
 
             xml = soup(data.read())
             quota_str = xml.find(XML_QUOTA).string
-            total_str = xml.find(XML_TOTAL).string
-            external_str = xml.find(XML_EXTERNAL).string
+            peak_str = xml.find(XML_PEAK).string
+            offpeak_str = xml.find(XML_OFFPEAK).string
             upload_str = xml.find(XML_UPLOAD).string
             date_str = xml.find(XML_START_DATE).string
             last_update_str = xml.find(XML_LAST_UPDATE).string
             next_update_str = xml.find(XML_NEXT_UPDATE).string
 
             log.debug("quota_str: %s", quota_str)
-            log.debug("total_str: %s", total_str)
-            log.debug("quota_str: %s", external_str)
+            log.debug("peak_str: %s", peak_str)
+            log.debug("offpeak_str: %s", offpeak_str)
             log.debug("upload_str: %s", upload_str)
             log.debug("date_str: %s", date_str)
             log.debug("last_update_str: %s", last_update_str)
             log.debug("next_update_str: %s", next_update_str)
-
 
             log.info("Converting strings to dates, ints, etc")
 
@@ -119,25 +118,24 @@ class AdamUtil:
 
             log.info("Converting dates")
 
-            total = int(total_str)
-            self.external = int(external_str)
-            self.local = total - self.external
+            self.peak = int(peak_str)
+            self.offpeak = int(offpeak_str)
             self.uploads = int(upload_str)
             self.quota = int(quota_str)
 
             log.info("Converting data")
 
-            log.debug("external: %d", self.external)
-            log.debug("local: %d", self.local)
+            log.debug("peak: %d", self.peak)
+            log.debug("offpeak: %d", self.offpeak)
             log.debug("uploads: %d", self.uploads)
             log.debug("quota: %d", self.quota)
 
             self.percent_remaining = int(round(
-                float(self.quota-self.external) / self.quota * 100))
+                float(self.quota-self.peak) / self.quota * 100))
             self.percent_used = int(round(
-                float(self.external) / self.quota * 100))
-            self.used = self.external
-            self.remaining = self.quota-self.external
+                float(self.peak) / self.quota * 100))
+            self.used = self.peak
+            self.remaining = self.quota-self.peak
 
             log.debug("percent_remaining: %d", self.percent_remaining)
             log.debug("percent_used: %d", self.percent_used)
