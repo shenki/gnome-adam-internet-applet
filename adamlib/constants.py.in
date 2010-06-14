@@ -34,7 +34,7 @@ ADAM_AUTHORS = [
     'Sam Pohlenz <retrix@internode.on.net>'
 	]
 
-WEB_DATA = 'https://members.adam.com.au/um2.0/usage.php'
+WEB_DATA = 'https://members.adam.com.au/um2.1'
 WEB_URI = 'https://members.adam.com.au'
 WEB_REALM = 'Adam Members Area External Access'
 
