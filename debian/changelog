@@ -1,3 +1,9 @@
+gnome-adam-internet-applet (0.2ubuntu4) natty; urgency=low
+
+  * Update build deps for Ubuntu Natty
+
+ -- Joel Stanley <joel@jms.id.au>  Fri, 10 Dec 2010 14:05:46 +1030
+
 gnome-adam-internet-applet (0.2ubuntu3) jaunty; urgency=low
 
   * Fix build deps
