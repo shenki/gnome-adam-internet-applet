@@ -182,8 +182,7 @@ class AdamMeter:
             else:
                 daystring = 'days'
 
-            tiptext =  "%i MB peak.\n" % self.adamutil.peak
-            tiptext += "%i MB offpeak.\n" % self.adamutil.offpeak
+            tiptext =  "%i MB used.\n" % self.adamutil.used
             tiptext += "%i MB upload.\n" % self.adamutil.uploads
             tiptext += "%i MB quota.\n" % self.adamutil.quota
             tiptext += "%i %s remaining." % (self.adamutil.daysleft, daystring)

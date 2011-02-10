@@ -130,12 +130,13 @@ class AdamUtil:
             log.debug("uploads: %d", self.uploads)
             log.debug("quota: %d", self.quota)
 
-            self.percent_remaining = int(round(
-                float(self.quota-self.peak) / self.quota * 100))
-            self.percent_used = int(round(
-                float(self.peak) / self.quota * 100))
-            self.used = self.peak
-            self.remaining = self.quota-self.peak
+            used = float(self.offpeak + self.peak)
+            remaining = float(self.quota - used)
+
+            self.percent_remaining = int(round(remaining / self.quota * 100))
+            self.percent_used = int(round(used / self.quota * 100))
+            self.used = int(used)
+            self.remaining = int(remaining)
 
             log.debug("percent_remaining: %d", self.percent_remaining)
             log.debug("percent_used: %d", self.percent_used)
