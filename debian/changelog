@@ -1,3 +1,10 @@
+gnome-adam-internet-applet (0.3ubuntu1) natty; urgency=low
+
+  * Re-work display for EzyChoice plans that count peak and offpeak as a
+    single quota.
+
+ -- Joel Stanley <joel@jms.id.au>  Thu, 10 Feb 2011 10:39:06 +1030
+
 gnome-adam-internet-applet (0.2ubuntu4) natty; urgency=low
 
   * Update build deps for Ubuntu Natty
