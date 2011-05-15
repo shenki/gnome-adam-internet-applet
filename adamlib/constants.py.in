@@ -23,9 +23,9 @@ ADAM_NAME = 'gnome-adam-internet-meter'
 
 ADAM_URL = 'http://jms.id.au/wiki/AdamUsageMeter'
 
-ADAM_VERSION = '0.2'
+ADAM_VERSION = '0.3'
 
-ADAM_COPYRIGHT = '(C) 2009 Joel Stanley'
+ADAM_COPYRIGHT = '(C) 2010 Joel Stanley'
 
 ADAM_DESCRIPTION = 'Applet for monitoring your Adam ADSL usage.'
 
@@ -34,9 +34,9 @@ ADAM_AUTHORS = [
     'Sam Pohlenz <retrix@internode.on.net>'
 	]
 
-WEB_DATA = 'https://members.adam.com.au/um2.1'
+WEB_DATA = 'https://members.adam.com.au/api'
 WEB_URI = 'https://members.adam.com.au'
-WEB_REALM = 'Adam Members Area External Access'
+WEB_REALM = 'AdamAPI Authentication'
 
 # XML tags
 XML_QUOTA = 'megabytequota'

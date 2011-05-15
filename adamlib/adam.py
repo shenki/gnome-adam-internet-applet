@@ -168,11 +168,11 @@ class AdamMeter:
 
             if self.adamutil.show_used:
                 percent = self.adamutil.percent_used
-                usage = self.adamutil.peak
+                usage = self.adamutil.used
                 status = "used"
             else:
                 percent = self.adamutil.percent_remaining
-                usage = self.adamutil.quota - self.adamutil.peak
+                usage = self.adamutil.quota - self.adamutil.used
                 status = "remaining"
 
             self.label.set_text("%i%%" % percent)
@@ -183,8 +183,8 @@ class AdamMeter:
                 daystring = 'days'
 
             tiptext =  "%i MB used.\n" % self.adamutil.used
-            tiptext += "%i MB upload.\n" % self.adamutil.uploads
             tiptext += "%i MB quota.\n" % self.adamutil.quota
+            tiptext += "IP: %s\n" % self.adamutil.ip_addr
             tiptext += "%i %s remaining." % (self.adamutil.daysleft, daystring)
 
         except Exception, err:
