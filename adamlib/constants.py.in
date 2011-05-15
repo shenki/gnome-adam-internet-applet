@@ -23,9 +23,9 @@ ADAM_NAME = 'gnome-adam-internet-meter'
 
 ADAM_URL = 'http://jms.id.au/wiki/AdamUsageMeter'
 
-ADAM_VERSION = '0.3'
+ADAM_VERSION = '0.4'
 
-ADAM_COPYRIGHT = '(C) 2010 Joel Stanley'
+ADAM_COPYRIGHT = '(C) 2011 Joel Stanley'
 
 ADAM_DESCRIPTION = 'Applet for monitoring your Adam ADSL usage.'
 
