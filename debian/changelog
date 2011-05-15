@@ -1,3 +1,9 @@
+gnome-adam-internet-applet (0.4ubuntu1) natty; urgency=low
+
+  * New release: Adapt to new XML and auth scheme
+
+ -- Joel Stanley <joel@jms.id.au>  Sun, 15 May 2011 21:55:50 +0930
+
 gnome-adam-internet-applet (0.3ubuntu1) natty; urgency=low
 
   * Re-work display for EzyChoice plans that count peak and offpeak as a
