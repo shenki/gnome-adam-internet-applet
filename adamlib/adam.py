@@ -168,11 +168,11 @@ class AdamMeter:
 
             if self.adamutil.show_used:
                 percent = self.adamutil.percent_used
-                usage = self.adamutil.peak
+                usage = self.adamutil.used
                 status = "used"
             else:
                 percent = self.adamutil.percent_remaining
-                usage = self.adamutil.quota - self.adamutil.peak
+                usage = self.adamutil.quota - self.adamutil.used
                 status = "remaining"
 
             self.label.set_text("%i%%" % percent)
@@ -182,10 +182,9 @@ class AdamMeter:
             else:
                 daystring = 'days'
 
-            tiptext =  "%i MB peak.\n" % self.adamutil.peak
-            tiptext += "%i MB offpeak.\n" % self.adamutil.offpeak
-            tiptext += "%i MB upload.\n" % self.adamutil.uploads
+            tiptext =  "%i MB used.\n" % self.adamutil.used
             tiptext += "%i MB quota.\n" % self.adamutil.quota
+            tiptext += "IP: %s\n" % self.adamutil.ip_addr
             tiptext += "%i %s remaining." % (self.adamutil.daysleft, daystring)
 
         except Exception, err:
@@ -221,8 +220,6 @@ class AdamMeter:
         preferences = glade.get_widget("preferences")
 
         # Set the input text to the current username/password values
-        usertext = glade.get_widget("username")
-        usertext.set_text(self.adamutil.username)
         passtext = glade.get_widget("password")
         passtext.set_text(self.adamutil.password)
 

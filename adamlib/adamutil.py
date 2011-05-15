@@ -21,10 +21,10 @@
 
 import urllib2
 import logging
-from BeautifulSoup import BeautifulSoup as soup
+from xml.etree.ElementTree import ElementTree
 from dateutil.parser import parse as dateparse
 from dateutil.relativedelta import relativedelta
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from adamlib.constants import XML_QUOTA, XML_PEAK, XML_OFFPEAK, \
         XML_UPLOAD, XML_START_DATE, XML_LAST_UPDATE, XML_NEXT_UPDATE, \
         WEB_REALM, WEB_URI, WEB_DATA
@@ -40,7 +40,6 @@ class AdamUtil:
         log = logging.getLogger("adamutil")
         log.info("Initalising")
 
-        self.username = ""
         self.password = ""
         self.show_used = False
         self.time = datetime.now()
@@ -56,12 +55,11 @@ class AdamUtil:
 
         self.start_date = 0
         self.last_update = datetime.min
-        self.next_update = datetime.now()
+        self.next_update = datetime.min
 
-        self.offpeak = 0
-        self.external = 0
-        self.uploads = 0
         self.quota = 0
+        self.used = 0
+        self.ip_addr = ""
 
     def do_update(self):
         """
@@ -77,7 +75,7 @@ class AdamUtil:
             auth = urllib2.HTTPBasicAuthHandler()
             auth.add_password(realm=WEB_REALM,
                     uri=WEB_URI,
-                    user=self.username,
+                    user='',
                     passwd=self.password)
             opener = urllib2.build_opener(auth)
             data = opener.open(WEB_DATA)
@@ -93,55 +91,50 @@ class AdamUtil:
         try:
             log.info("Parsing data")
 
-            xml = soup(data.read())
-            quota_str = xml.find(XML_QUOTA).string
-            peak_str = xml.find(XML_PEAK).string
-            offpeak_str = xml.find(XML_OFFPEAK).string
-            upload_str = xml.find(XML_UPLOAD).string
-            date_str = xml.find(XML_START_DATE).string
-            last_update_str = xml.find(XML_LAST_UPDATE).string
-            next_update_str = xml.find(XML_NEXT_UPDATE).string
+            t = ElementTree()
+            t.parse(data)
+            usage = t.find('Customer/Account/Usage/Bucket/Usage').text
+            quota = t.find('Customer/Account/Usage/Bucket/Quota').text
 
-            log.debug("quota_str: %s", quota_str)
-            log.debug("peak_str: %s", peak_str)
-            log.debug("offpeak_str: %s", offpeak_str)
-            log.debug("upload_str: %s", upload_str)
-            log.debug("date_str: %s", date_str)
-            log.debug("last_update_str: %s", last_update_str)
-            log.debug("next_update_str: %s", next_update_str)
+            start_date = t.find('Customer/Account/Usage/Bucket/Quota').items()[1][1]
 
-            log.info("Converting strings to dates, ints, etc")
+            last_update = t.find('Customer/Account/Usage/LastUsageUpdate').text
+            ip_addr = t.find('Customer/Account/IPAddresses/IPv4Address').text
 
-            self.start_date = dateparse(date_str)
-            self.last_update = dateparse(last_update_str)
-            self.next_update = dateparse(next_update_str)
+            log.debug("quota: %s", quota)
+            log.debug("usage: %s", usage)
+            log.debug("date: %s", date)
+            log.debug("last_update: %s", last_update)
 
             log.info("Converting dates")
 
-            self.peak = int(peak_str)
-            self.offpeak = int(offpeak_str)
-            self.uploads = int(upload_str)
-            self.quota = int(quota_str)
+            self.start_date = dateparse(start_date)
+            self.last_update = dateparse(last_update)
+            self.next_update = self.last_update + timedelta(minutes=30)
 
             log.info("Converting data")
 
-            log.debug("peak: %d", self.peak)
-            log.debug("offpeak: %d", self.offpeak)
-            log.debug("uploads: %d", self.uploads)
-            log.debug("quota: %d", self.quota)
+            self.quota = int(quota) / 1000 / 1000
+            self.usage = int(usage) / 1000 / 1000
 
-            self.percent_remaining = int(round(
-                float(self.quota-self.peak) / self.quota * 100))
-            self.percent_used = int(round(
-                float(self.peak) / self.quota * 100))
-            self.used = self.peak
-            self.remaining = self.quota-self.peak
+            self.ip_addr = ip_addr
+
+            log.debug("quota: %d", self.quota)
+            log.debug("usage: %d", self.usage)
+
+            used = float(self.usage)
+            remaining = float(self.quota - used)
+
+            self.percent_remaining = int(round(remaining / self.quota * 100))
+            self.percent_used = int(round(used / self.quota * 100))
+            self.used = int(used)
+            self.remaining = int(remaining)
 
             log.debug("percent_remaining: %d", self.percent_remaining)
             log.debug("percent_used: %d", self.percent_used)
 
-            end_date = self.start_date.date() + relativedelta(months=1)
-            self.daysleft = (end_date - date.today()).days
+            end_date = self.start_date.date() + relativedelta(months=+1)
+            self.daysleft = (end_date - date.today()).days - 1
 
             log.debug("daysleft: %d", self.daysleft)
 
@@ -157,10 +150,17 @@ class AdamUtil:
         Updates data, first checking that there is no recent data
         """
         log = logging.getLogger("adamutil.update")
-        log.info("Checking weather to fetch data")
-        log.info("Is %s > %s? %s", self.next_update, self.last_update,
-                self.next_update > self.last_update)
 
-        if self.next_update > self.last_update:
-            log.info("Fetching data")
-            self.do_update()
+#         log.info("Checking weather to fetch data")
+#         now = datetime.utcnow()
+# 
+#         print "now: ", now, type(now)
+#         print "next_update: ", self.next_update, type(self.next_update)
+# 
+#         log.info("Is %s > %s? %s", now, self.next_update,
+#                 now > self.next_update)
+# 
+#         if now > self.next_update:
+
+        log.info("Fetching data")
+        self.do_update()
