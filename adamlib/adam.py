@@ -220,8 +220,6 @@ class AdamMeter:
         preferences = glade.get_widget("preferences")
 
         # Set the input text to the current username/password values
-        usertext = glade.get_widget("username")
-        usertext.set_text(self.adamutil.username)
         passtext = glade.get_widget("password")
         passtext.set_text(self.adamutil.password)
 

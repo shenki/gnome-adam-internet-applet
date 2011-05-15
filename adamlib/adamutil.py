@@ -40,7 +40,6 @@ class AdamUtil:
         log = logging.getLogger("adamutil")
         log.info("Initalising")
 
-        self.username = ""
         self.password = ""
         self.show_used = False
         self.time = datetime.now()
